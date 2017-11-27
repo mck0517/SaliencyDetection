@@ -17,6 +17,7 @@ void SaliencyDetectionUsingFT(IplImage *inputImage, unsigned char *saliencyImage
 
 	int index = 0;
 
+	//RGB to LAB Color 
 	for(i=0; i<imageH; i++)
 	{
 		index = i*imageW;
@@ -46,7 +47,6 @@ void SaliencyDetectionUsingFT(IplImage *inputImage, unsigned char *saliencyImage
 		int sG = GREEN_FT[j];
 		int sB = BLUE_FT[j];
 
-		//sRGB to XYZ conversion
 		float R = sR/255.0f;
 		float G = sG/255.0f;
 		float B = sB/255.0f;
@@ -86,7 +86,6 @@ void SaliencyDetectionUsingFT(IplImage *inputImage, unsigned char *saliencyImage
 		float Y = r * 0.21f + g * 0.71f + b * 0.07f;
 		float Z = r * 0.01f + g * 0.11f + b * 0.95f;
 
-		// XYZ to LAB conversion
 		float epsilon = 0.008f; 
 		float kappa = 903.3f; 
 
@@ -154,10 +153,12 @@ void SaliencyDetectionUsingFT(IplImage *inputImage, unsigned char *saliencyImage
 	memset(ACOLOR_SMOOTH_FT, 0, sizeof(ACOLOR_SMOOTH_FT));
 	memset(BCOLOR_SMOOTH_FT, 0, sizeof(BCOLOR_SMOOTH_FT));
 
+	//Gaussian Blur 
 	GaussianBlurUsing3by3(LCOLOR_FT, LCOLOR_SMOOTH_FT, imageW, imageH);
 	GaussianBlurUsing3by3(ACOLOR_FT, ACOLOR_SMOOTH_FT, imageW, imageH);
 	GaussianBlurUsing3by3(BCOLOR_FT, BCOLOR_SMOOTH_FT,  imageW, imageH);
 
+	//Saliency Map 
 	for(i=0; i<totalSize; i++)
 	{
 		SALIENCY_MAP_FT[i] = (LCOLOR_SMOOTH_FT[i]-avgL)*(LCOLOR_SMOOTH_FT[i]-avgL) + 
@@ -165,8 +166,9 @@ void SaliencyDetectionUsingFT(IplImage *inputImage, unsigned char *saliencyImage
 							 (BCOLOR_SMOOTH_FT[i]-avgB)*(BCOLOR_SMOOTH_FT[i]-avgB);
 	}
 
+	//Normalization 
 	float maxVal = 0.0f;
-	float minVal = (1 << 30); //float minVal = 100000.0f; 
+	float minVal = (1 << 30); 
 
 	for(i=0; i<totalSize; i++)
 	{

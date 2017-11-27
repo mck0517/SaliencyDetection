@@ -79,6 +79,7 @@ void SaliencyDetectionUsingMSS(IplImage *inputImage, unsigned char *saliencyImag
 
 	int index = 0;
 
+	//RGB to LAB Color 
 	for(i=0; i<imageH; i++)
 	{
 		index = i*imageW;
@@ -108,7 +109,6 @@ void SaliencyDetectionUsingMSS(IplImage *inputImage, unsigned char *saliencyImag
 		int sG = GREEN_MSS[j];
 		int sB = BLUE_MSS[j];
 
-		//sRGB to XYZ conversion
 		float R = sR/255.0f;
 		float G = sG/255.0f;
 		float B = sB/255.0f;
@@ -148,7 +148,6 @@ void SaliencyDetectionUsingMSS(IplImage *inputImage, unsigned char *saliencyImag
 		float Y = r * 0.21f + g * 0.71f + b * 0.07f;
 		float Z = r * 0.01f + g * 0.11f + b * 0.95f;
 
-		// XYZ to LAB conversion
 		float epsilon = 0.008f; 
 		float kappa = 903.3f; 
 
@@ -200,6 +199,7 @@ void SaliencyDetectionUsingMSS(IplImage *inputImage, unsigned char *saliencyImag
 	memset(ACOLOR_SMOOTH_MSS, 0, sizeof(ACOLOR_SMOOTH_MSS));
 	memset(BCOLOR_SMOOTH_MSS, 0, sizeof(BCOLOR_SMOOTH_MSS));
 
+	//Gaussian Blur  
 	GaussianBlurUsing3by3(LCOLOR_MSS, LCOLOR_SMOOTH_MSS, imageW, imageH);
 	GaussianBlurUsing3by3(ACOLOR_MSS, ACOLOR_SMOOTH_MSS, imageW, imageH);
 	GaussianBlurUsing3by3(BCOLOR_MSS, BCOLOR_SMOOTH_MSS, imageW, imageH);
@@ -208,6 +208,7 @@ void SaliencyDetectionUsingMSS(IplImage *inputImage, unsigned char *saliencyImag
 	memset(INTEGRAL_A_IMAGE_MSS, 0, sizeof(INTEGRAL_A_IMAGE_MSS));
 	memset(INTEGRAL_B_IMAGE_MSS, 0, sizeof(INTEGRAL_B_IMAGE_MSS));
 
+	//Integral Image 
 	CreateIntegralImage(LCOLOR_MSS, imageW, imageH, INTEGRAL_L_IMAGE_MSS);
 	CreateIntegralImage(ACOLOR_MSS, imageW, imageH, INTEGRAL_A_IMAGE_MSS);
 	CreateIntegralImage(BCOLOR_MSS, imageW, imageH, INTEGRAL_B_IMAGE_MSS);
@@ -216,6 +217,7 @@ void SaliencyDetectionUsingMSS(IplImage *inputImage, unsigned char *saliencyImag
 
 	index = 0;
 
+	//Saliency Map 
 	for(int j=0; j<imageH; j++)
 	{
 		int yoff = FIND_MIN(j, imageH-j);
@@ -243,6 +245,7 @@ void SaliencyDetectionUsingMSS(IplImage *inputImage, unsigned char *saliencyImag
 	}
 
 
+	//Normalization 
 	float maxVal = 0.0f;
 	float minVal = (1 << 30); 
 

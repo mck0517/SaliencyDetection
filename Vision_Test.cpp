@@ -29,7 +29,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	//////////////////////////////////////////////////////////////////////////
 	//Run Algorithm
+	//Case 1: MAXIMUM SYMMETRIC SURROUND
 	SaliencyDetectionUsingMSS(iplInputImage, outputMSSimage);
+
+	//Case 2: Frequency-tuned
 	SaliencyDetectionUsingFT(iplInputImage, outputFTimage);
 
 	//Save result image
